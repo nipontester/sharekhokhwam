@@ -210,6 +210,17 @@ body {
 .pill.offline    { color: var(--warn);  border-color: #EAC6BB;     background: #FBF1EE; }
 
 .pill.live .dot { animation: pulse 1.6s ease-in-out infinite; }
+
+.pad-status { display: inline-flex; align-items: center; gap: 7px; }
+
+.pill.people {
+  color: var(--khram);
+  border-color: #CBD9E6;
+  background: #EDF3F9;
+  gap: 5px;
+  font-weight: 600;
+}
+.pill.people .people-ico { display: block; }
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(14, 159, 110, .45); }
   55%      { box-shadow: 0 0 0 6px rgba(14, 159, 110, 0); }
@@ -222,16 +233,6 @@ body {
   border: 1px solid var(--line);
   border-radius: 0 14px 14px 14px;
   box-shadow: 0 1px 2px rgba(20, 50, 79, .05), 0 12px 32px -12px rgba(20, 50, 79, .12);
-}
-
-.presence-bar {
-  margin: 10px 0 0;
-  padding: 8px 14px;
-  background: #EDF3F9;
-  border: 1px solid #CBD9E6;
-  border-radius: 10px;
-  font-size: 12.5px;
-  color: var(--khram);
 }
 
 .pad {

@@ -52,13 +52,22 @@
           <button id="dice-btn" class="dice-btn" type="button" title="สุ่มชื่อห้องใหม่">🎲</button>
           <span class="room-edit" aria-hidden="true">✎</span>
         </div>
-        <span id="live-pill" class="pill connecting">
-          <span class="dot" aria-hidden="true"></span>
-          <span id="live-text" aria-live="polite">กำลังเชื่อมต่อ</span>
+        <span class="pad-status">
+          <span id="presence-pill" class="pill people" hidden title="จำนวนคนที่เปิดห้องนี้อยู่ตอนนี้">
+            <svg class="people-ico" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+              <circle cx="9" cy="8" r="3.2" fill="currentColor"/>
+              <path d="M3.5 19c0-3 2.6-5 5.5-5s5.5 2 5.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="16.5" cy="8.5" r="2.6" fill="currentColor" opacity=".55"/>
+              <path d="M15 14.2c2.4.1 5 1.9 5 4.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+            </svg>
+            <span id="presence-count">1</span>
+          </span>
+          <span id="live-pill" class="pill connecting">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="live-text" aria-live="polite">กำลังเชื่อมต่อ</span>
+          </span>
         </span>
       </div>
-
-      <div id="presence-bar" class="presence-bar" role="status" aria-live="polite" hidden></div>
 
       <div class="card pad">
         <div id="conflict" class="conflict" role="alert" hidden>
@@ -85,7 +94,7 @@
 
       <div id="recent" class="recent" hidden></div>
 
-      <p class="hint">ตั้งชื่อห้องแล้วกด "คัดลอกลิงก์ห้องนี้" ส่งให้เพื่อน — ทุกคนที่เปิดลิงก์ห้องเดียวกันเห็นข้อความชุดเดียวกัน (ลิงก์ห้องคือ <code>#ชื่อห้อง</code> ต่อท้าย URL) · กด 🎲 เพื่อสุ่มชื่อห้องใหม่ที่เดายาก</p>
+      <p class="hint">ตั้งชื่อห้องแล้วกด "คัดลอกลิงก์ห้องนี้" ส่งให้เพื่อน — ทุกคนที่เปิดลิงก์ห้องเดียวกันเห็นข้อความชุดเดียวกัน (ลิงก์ห้องคือ <code>#ชื่อห้อง</code> ต่อท้าย URL)<br>กด 🎲 เพื่อสุ่มชื่อห้องใหม่ที่เดายาก</p>
     </main>
 
   </div>

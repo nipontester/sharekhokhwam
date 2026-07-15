@@ -29,7 +29,8 @@ const els = {
   conflictLoad: document.getElementById('conflict-load'),
   conflictDismiss: document.getElementById('conflict-dismiss'),
   recent:    document.getElementById('recent'),
-  presence:  document.getElementById('presence-bar'),
+  presence:  document.getElementById('presence-pill'),
+  presenceN: document.getElementById('presence-count'),
 }
 
 const DEBOUNCE_MS = 500
@@ -107,9 +108,10 @@ function setPill(state) {
 function setPresence(n) {
   if (!room || !n) { els.presence.hidden = true; return }
   els.presence.hidden = false
-  els.presence.textContent = n === 1
-    ? `ตอนนี้มีคุณอยู่ในห้อง "${room}" คนเดียว`
-    : `ตอนนี้มี ${n} คนอยู่ในห้อง "${room}"`
+  els.presenceN.textContent = n
+  els.presence.title = n === 1
+    ? 'มีคุณอยู่ในห้องนี้คนเดียว'
+    : `มี ${n} คนอยู่ในห้องนี้ตอนนี้`
 }
 
 function setEditorEnabled(on) {
