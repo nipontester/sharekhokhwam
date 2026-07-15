@@ -1,0 +1,8 @@
+# เว็บ static ล้วน — ไม่ต้องมีขั้นตอน build
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"

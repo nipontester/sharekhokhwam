@@ -1,0 +1,287 @@
+/* ============================================================
+   แชร์ข้อมูล (ShareKhoKhwam) — สไตล์หลัก
+   โทน: กระดาษโน้ตสีเทาฟ้า + ครามไทย (Thai indigo) + จุดสถานะเขียวสด
+   ฟอนต์: IBM Plex Sans Thai (UI) / IBM Plex Mono ผสม Plex Sans Thai (ช่องพิมพ์)
+   ============================================================ */
+
+:root {
+  --paper: #EDF1F4;        /* พื้นหลังกระดาษ */
+  --dot: #D3DDE5;          /* จุดตารางบนกระดาษ */
+  --card: #FFFFFF;         /* การ์ดสมุด */
+  --ink: #1A2732;          /* ตัวหนังสือหลัก */
+  --muted: #5C6B78;        /* ตัวหนังสือรอง */
+  --line: #D7DFE6;         /* เส้นขอบ */
+  --khram: #20486F;        /* ครามไทย */
+  --khram-deep: #14324F;   /* ครามเข้ม */
+  --live: #0E9F6E;         /* เขียวเรียลไทม์ */
+  --warn: #C2472F;         /* แดงอิฐ แจ้งปัญหา */
+  --focus: rgba(32, 72, 111, .22);
+
+  --font-ui: 'IBM Plex Sans Thai', system-ui, -apple-system, sans-serif;
+  /* โค้ด/อังกฤษเป็น mono, สระ-วรรณยุกต์ไทย fallback ไป Plex Sans Thai อ่านสบาย */
+  --font-pad: 'IBM Plex Mono', 'IBM Plex Sans Thai', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-ui);
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size: 26px 26px;
+  -webkit-font-smoothing: antialiased;
+}
+
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap;
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 40px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- ส่วนหัว ---------- */
+
+.top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -.4px;
+  color: var(--khram-deep);
+}
+
+.tagline {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.btn {
+  padding: 9px 16px;
+  border: 1px solid var(--khram);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--khram);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn:hover { background: var(--khram); color: #fff; }
+
+.btn:focus-visible,
+.room-tab:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- กำลังโหลด ---------- */
+
+.loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--muted);
+}
+
+.spinner {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 3px solid var(--line);
+  border-top-color: var(--khram);
+  animation: spin .9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(1turn); } }
+
+/* ---------- แท็บห้อง + สถานะเรียลไทม์ ---------- */
+
+#app { flex: 1; flex-direction: column; }
+#app:not([hidden]) { display: flex; }
+
+.reveal { animation: rise .35s ease-out; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.pad-tabs {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ลายเซ็นของหน้า: ป้ายแฟ้มเอกสารบอกชื่อห้อง เชื่อมเนียนกับตัวสมุด */
+.room-tab {
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--khram-deep);
+  cursor: pointer;
+}
+.room-tab:hover { background: #F6FAFD; }
+
+.room-label { font-weight: 500; color: var(--muted); }
+.room-edit { font-size: 12px; color: var(--muted); }
+.room-tab:hover .room-edit { color: var(--khram); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+.pill.connecting { color: var(--muted); border-color: var(--line); background: #fff; }
+.pill.live       { color: var(--live);  border-color: #BEE3D3;     background: #EFFBF5; }
+.pill.offline    { color: var(--warn);  border-color: #EAC6BB;     background: #FBF1EE; }
+
+.pill.live .dot { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(14, 159, 110, .45); }
+  55%      { box-shadow: 0 0 0 6px rgba(14, 159, 110, 0); }
+}
+
+/* ---------- สมุดแชร์ ---------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 0 14px 14px 14px;
+  box-shadow: 0 1px 2px rgba(20, 50, 79, .05), 0 12px 32px -12px rgba(20, 50, 79, .12);
+}
+
+.pad {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: border-color .15s, box-shadow .15s;
+}
+.pad:focus-within {
+  border-color: var(--khram);
+  box-shadow: 0 0 0 3px var(--focus), 0 12px 32px -12px rgba(20, 50, 79, .12);
+}
+
+#editor {
+  flex: 1;
+  width: 100%;
+  min-height: 56vh;
+  padding: 22px 24px;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: var(--ink);
+  font: 400 15px/1.8 var(--font-pad);
+  caret-color: var(--khram);
+  border-radius: 0 14px 0 0;
+}
+#editor::placeholder { color: #9AAAB8; }
+
+.card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 9px 16px;
+  border-top: 1px dashed var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+#save-state { font-weight: 500; min-height: 1em; }
+#save-state.ok  { color: var(--live); }
+#save-state.err { color: var(--warn); }
+
+.foot-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-pad);
+  font-size: 12px;
+}
+#updated-at:empty + .sep { display: none; }
+
+.hint {
+  margin: 14px 2px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.hint code,
+.setup code {
+  font-family: var(--font-pad);
+  font-size: 12px;
+  background: #E3EAF0;
+  border-radius: 6px;
+  padding: 2px 6px;
+  color: var(--khram-deep);
+}
+
+/* ---------- การ์ดตั้งค่าครั้งแรก ---------- */
+
+.setup {
+  border-radius: 14px;
+  max-width: 640px;
+  padding: 26px 28px;
+}
+.setup h2 { margin: 0 0 12px; font-size: 20px; color: var(--khram-deep); }
+.setup ol { margin: 0 0 14px; padding-left: 22px; font-size: 15px; line-height: 1.9; }
+.setup .muted { margin: 0; font-size: 13px; color: var(--muted); }
+
+/* ---------- จอเล็ก + ลดการเคลื่อนไหว ---------- */
+
+@media (max-width: 560px) {
+  .wrap { padding: 22px 14px 28px; }
+  .top { align-items: flex-start; margin-bottom: 20px; }
+  .brand h1 { font-size: 25px; }
+  #editor { padding: 16px; min-height: 52vh; font-size: 14.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
