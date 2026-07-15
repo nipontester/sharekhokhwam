@@ -8,6 +8,7 @@
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 import { SUPABASE_URL, SUPABASE_ANON_KEY, TABLE_NAME } from './config.js'
+import { POKEMON } from './pokemon.js'
 
 const els = {
   loading:   document.getElementById('loading'),
@@ -123,12 +124,10 @@ function setEditorEnabled(on) {
 
 // ---------- สุ่มชื่อห้อง (ascii อ่านง่าย เดายาก) ----------
 
-const NOUN = ['otter','maple','comet','river','panda','ember','lotus','falcon',
-  'pixel','willow','mango','koala','tiger','cloud','pearl','lemon','robin','coral']
 function randomRoomName() {
-  const n = NOUN[Math.floor(Math.random() * NOUN.length)]
+  const name = POKEMON[Math.floor(Math.random() * POKEMON.length)]
   const num = Math.floor(1000 + Math.random() * 9000)
-  return `${n}-${num}`   // เช่น willow-7681
+  return `${name}-${num}`   // เช่น pikachu-7681
 }
 
 // ---------- จำห้องที่เคยเข้า (localStorage) ----------
