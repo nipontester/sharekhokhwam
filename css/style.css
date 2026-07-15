@@ -191,7 +191,8 @@ body {
 }
 .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 
-.pill.connecting { color: var(--muted); border-color: var(--line); background: #fff; }
+.pill.connecting,
+.pill.idle       { color: var(--muted); border-color: var(--line); background: #fff; }
 .pill.live       { color: var(--live);  border-color: #BEE3D3;     background: #EFFBF5; }
 .pill.offline    { color: var(--warn);  border-color: #EAC6BB;     background: #FBF1EE; }
 
@@ -236,6 +237,11 @@ body {
   border-radius: 0 14px 0 0;
 }
 #editor::placeholder { color: #9AAAB8; }
+#editor:disabled {
+  background: #F7FAFC;
+  color: var(--muted);
+  cursor: not-allowed;
+}
 
 .card-foot {
   display: flex;

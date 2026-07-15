@@ -48,17 +48,18 @@ function configMissing() {
 
 function readRoom() {
   const h = decodeURIComponent(location.hash.replace(/^#/, '')).trim()
-  return (h || 'main').slice(0, 64)
+  return h.slice(0, 64)   // ไม่มี hash = ยังไม่เลือกห้อง ('')
 }
 
 function updateRoomUI() {
   els.roomInput.value = room
   fitRoomInput()
-  document.title = room === 'main' ? BASE_TITLE : `#${room} · แชร์ข้อความ`
+  document.title = room ? `#${room} · แชร์ข้อความ` : BASE_TITLE
 }
 
 function fitRoomInput() {
-  els.roomInput.style.width = Math.max(4, els.roomInput.value.length + 1) + 'ch'
+  const len = els.roomInput.value.length
+  els.roomInput.style.width = Math.max(len + 1, len ? 4 : 13) + 'ch'
 }
 
 function updateCount() {
@@ -83,7 +84,30 @@ function setPill(state) {
   els.pill.className = `pill ${state}`
   els.pillText.textContent =
     state === 'live' ? 'เรียลไทม์' :
-    state === 'offline' ? 'หลุดการเชื่อมต่อ' : 'กำลังเชื่อมต่อ'
+    state === 'offline' ? 'หลุดการเชื่อมต่อ' :
+    state === 'idle' ? 'ยังไม่ได้เลือกห้อง' : 'กำลังเชื่อมต่อ'
+}
+
+function setEditorEnabled(on) {
+  els.editor.disabled = !on
+  els.editor.placeholder = on
+    ? 'ใส่ข้อความที่อยากแชร์…'
+    : 'ตั้งชื่อห้องที่ป้ายด้านบนก่อน แล้วค่อยเริ่มพิมพ์…'
+}
+
+// สถานะยังไม่เลือกห้อง: ล้างช่อง ปิดการพิมพ์ ตัดการเชื่อมต่อทั้งหมด
+function enterNoRoom() {
+  if (channel) { supabase.removeChannel(channel); channel = null }
+  clearTimeout(reconnectTimer)
+  clearTimeout(saveTimer)
+  clearTimeout(retryTimer)
+  dirty = false
+  els.editor.value = ''
+  updateCount()
+  setUpdated(null)
+  setSaveState('idle')
+  setEditorEnabled(false)
+  setPill('idle')
 }
 
 // ---------- โหลดข้อความของห้อง ----------
@@ -170,7 +194,7 @@ function scheduleSave() {
 
 async function save() {
   clearTimeout(saveTimer)
-  if (!dirty || saving) return
+  if (!room || !dirty || saving) return
 
   const content = els.editor.value
   const target = room
@@ -208,7 +232,7 @@ async function flushNow() {
 
 // ก่อนปิดแท็บ/สลับแอป: ยิงบันทึกรอบสุดท้ายแบบ keepalive
 function flushOnLeave() {
-  if (!dirty || configMissing()) return
+  if (!room || !dirty || configMissing()) return
   try {
     fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
       method: 'POST',
@@ -257,8 +281,21 @@ window.addEventListener('hashchange', async () => {
   await flushNow()          // เก็บของห้องเดิมให้เรียบร้อยก่อน
   room = next
   updateRoomUI()
-  await loadRoom()
+
+  if (!room) {              // ลบชื่อห้อง = กลับสู่สถานะยังไม่เลือกห้อง
+    enterNoRoom()
+    return
+  }
+
+  setEditorEnabled(true)
+  const status = await loadRoom()
+  if (status === 'no-table') {
+    els.app.hidden = true
+    els.setup.hidden = false
+    return
+  }
   resubscribe()
+  els.editor.focus()
 })
 
 // ช่องชื่อห้องในป้ายแท็บ: พิมพ์แล้วกด Enter เพื่อเปลี่ยนห้อง (Esc = ยกเลิก)
@@ -278,18 +315,23 @@ els.roomInput.addEventListener('keydown', (e) => {
 
 els.roomInput.addEventListener('blur', () => {
   const name = els.roomInput.value.trim().replace(/\s+/g, '-').slice(0, 64)
-  const target = name || 'main'
-  if (target === room) {
+  if (name === room) {
     els.roomInput.value = room
     fitRoomInput()
     return
   }
-  location.hash = target !== 'main' ? encodeURIComponent(target) : ''
+  location.hash = name ? encodeURIComponent(name) : ''
 })
 
 els.copyBtn.addEventListener('click', async () => {
-  const url = location.origin + location.pathname +
-    (room !== 'main' ? '#' + encodeURIComponent(room) : '')
+  if (!room) {
+    const old = els.copyBtn.textContent
+    els.copyBtn.textContent = 'ตั้งชื่อห้องก่อน'
+    els.roomInput.focus()
+    setTimeout(() => { els.copyBtn.textContent = old }, 1500)
+    return
+  }
+  const url = location.origin + location.pathname + '#' + encodeURIComponent(room)
   try {
     await navigator.clipboard.writeText(url)
     const old = els.copyBtn.textContent
@@ -317,6 +359,17 @@ async function init() {
 
   supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   updateRoomUI()
+
+  if (!room) {              // ยังไม่เลือกห้อง: ให้ตั้งชื่อห้องก่อนถึงจะพิมพ์ได้
+    enterNoRoom()
+    els.loading.hidden = true
+    els.app.hidden = false
+    requestAnimationFrame(() => els.app.classList.add('reveal'))
+    els.roomInput.focus()
+    return
+  }
+
+  setEditorEnabled(true)
   const status = await loadRoom()
 
   els.loading.hidden = true
