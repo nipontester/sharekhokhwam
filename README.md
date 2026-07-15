@@ -1,4 +1,4 @@
-# แชร์ข้อมูล (ShareKhoKhwam) × Supabase
+# แชร์ข้อความ (ShareKhoKhwam) × Supabase
 
 Shared notepad เรียลไทม์ — พิมพ์ที่นี่ ทุกคนที่เปิดลิงก์เดียวกันเห็นพร้อมกันทันที
 ต่อยอดจากต้นฉบับ [แบ่งกันดู / BangGunDo-Demo](https://github.com/phongsakornm/BangGunDo-Demo) โดยเปลี่ยนจาก Firebase → **Supabase** และเปลี่ยนจาก Next.js → **เว็บ static ล้วน** เพื่อให้ deploy บน **Netlify** ได้ง่ายที่สุด (ไม่ต้อง build ไม่ต้องมี server)

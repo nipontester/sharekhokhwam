@@ -1,5 +1,5 @@
 /* ============================================================
-   แชร์ข้อมูล (ShareKhoKhwam) — สไตล์หลัก
+   แชร์ข้อความ (ShareKhoKhwam) — สไตล์หลัก
    โทน: กระดาษโน้ตสีเทาฟ้า + ครามไทย (Thai indigo) + จุดสถานะเขียวสด
    ฟอนต์: IBM Plex Sans Thai (UI) / IBM Plex Mono ผสม Plex Sans Thai (ช่องพิมพ์)
    ============================================================ */
@@ -91,8 +91,7 @@ body {
 }
 .btn:hover { background: var(--khram); color: #fff; }
 
-.btn:focus-visible,
-.room-tab:focus-visible {
+.btn:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
@@ -155,9 +154,25 @@ body {
   font-size: 13.5px;
   font-weight: 600;
   color: var(--khram-deep);
-  cursor: pointer;
+  cursor: text;
 }
 .room-tab:hover { background: #F6FAFD; }
+
+.room-input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 0 0 1px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--khram-deep);
+  caret-color: var(--khram);
+  width: 5ch;
+  min-width: 4ch;
+  border-bottom: 1px dashed transparent;
+}
+.room-input:focus { border-bottom-color: var(--khram); }
 
 .room-label { font-weight: 500; color: var(--muted); }
 .room-edit { font-size: 12px; color: var(--muted); }

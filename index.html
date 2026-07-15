@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>แชร์ข้อมูล — เห็นพร้อมกันแบบเรียลไทม์</title>
+  <title>แชร์ข้อความ — เห็นพร้อมกันแบบเรียลไทม์</title>
   <meta name="description" content="พิมพ์ที่นี่ ทุกคนที่เปิดลิงก์เดียวกันเห็นพร้อมกันทันที — shared notepad เรียลไทม์ด้วย Supabase" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='16'%20y='6'%20width='40'%20height='40'%20rx='10'%20fill='%238FB3D9'/%3E%3Crect%20x='8'%20y='16'%20width='42'%20height='42'%20rx='10'%20fill='%2320486F'/%3E%3Ccircle%20cx='42'%20cy='28'%20r='5'%20fill='%230E9F6E'/%3E%3C/svg%3E" />
 
@@ -18,7 +18,7 @@
 
     <header class="top">
       <div class="brand">
-        <h1>แชร์ข้อมูล</h1>
+        <h1>แชร์ข้อความ</h1>
         <p class="tagline">ShareKhoKhwam · พิมพ์ที่นี่ ทุกคนที่เปิดลิงก์เดียวกันเห็นพร้อมกันทันที</p>
       </div>
       <button id="copy-link" class="btn" type="button">คัดลอกลิงก์ห้องนี้</button>
@@ -44,11 +44,12 @@
     <!-- ตัวแอปหลัก -->
     <main id="app" hidden>
       <div class="pad-tabs">
-        <button id="room-tab" class="room-tab" type="button" title="เปลี่ยนห้อง">
-          <span class="room-label">ห้อง</span>
-          <span id="room-name">main</span>
+        <div id="room-tab" class="room-tab" title="พิมพ์ชื่อห้องแล้วกด Enter">
+          <label class="room-label" for="room-input">ห้อง</label>
+          <input id="room-input" class="room-input" type="text" value="main"
+                 maxlength="64" autocomplete="off" spellcheck="false" />
           <span class="room-edit" aria-hidden="true">✎</span>
-        </button>
+        </div>
         <span id="live-pill" class="pill connecting">
           <span class="dot" aria-hidden="true"></span>
           <span id="live-text" aria-live="polite">กำลังเชื่อมต่อ</span>
@@ -56,8 +57,8 @@
       </div>
 
       <div class="card pad">
-        <label class="sr-only" for="editor">ข้อมูลที่อยากแชร์</label>
-        <textarea id="editor" placeholder="ใส่ข้อมูลที่อยากแชร์…" spellcheck="false" autocomplete="off"></textarea>
+        <label class="sr-only" for="editor">ข้อความที่อยากแชร์</label>
+        <textarea id="editor" placeholder="ใส่ข้อความที่อยากแชร์…" spellcheck="false" autocomplete="off"></textarea>
         <div class="card-foot">
           <span id="save-state" aria-live="polite"></span>
           <span class="foot-right">

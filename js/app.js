@@ -1,5 +1,5 @@
 // ============================================================
-// แชร์ข้อมูล (ShareKhoKhwam) — แชร์ข้อความเรียลไทม์ด้วย Supabase
+// แชร์ข้อความ (ShareKhoKhwam) — สมุดแชร์เรียลไทม์ด้วย Supabase
 // พิมพ์ → หน่วงสั้น ๆ แล้วบันทึกอัตโนมัติ → ทุกเบราว์เซอร์ที่เปิด
 // ห้องเดียวกันได้รับข้อความใหม่ผ่าน Supabase Realtime ทันที
 // ============================================================
@@ -17,13 +17,13 @@ const els = {
   saveMsg:  document.getElementById('save-state'),
   updated:  document.getElementById('updated-at'),
   count:    document.getElementById('char-count'),
-  roomBtn:  document.getElementById('room-tab'),
-  roomName: document.getElementById('room-name'),
+  roomTab:   document.getElementById('room-tab'),
+  roomInput: document.getElementById('room-input'),
   copyBtn:  document.getElementById('copy-link'),
 }
 
 const DEBOUNCE_MS = 500
-const BASE_TITLE = 'แชร์ข้อมูล — เห็นพร้อมกันแบบเรียลไทม์'
+const BASE_TITLE = 'แชร์ข้อความ — เห็นพร้อมกันแบบเรียลไทม์'
 const timeFmt = new Intl.DateTimeFormat('th-TH', {
   day: '2-digit', month: '2-digit', year: 'numeric',
   hour: '2-digit', minute: '2-digit',
@@ -52,8 +52,13 @@ function readRoom() {
 }
 
 function updateRoomUI() {
-  els.roomName.textContent = room
-  document.title = room === 'main' ? BASE_TITLE : `#${room} · แชร์ข้อมูล`
+  els.roomInput.value = room
+  fitRoomInput()
+  document.title = room === 'main' ? BASE_TITLE : `#${room} · แชร์ข้อความ`
+}
+
+function fitRoomInput() {
+  els.roomInput.style.width = Math.max(4, els.roomInput.value.length + 1) + 'ch'
 }
 
 function updateCount() {
@@ -256,11 +261,30 @@ window.addEventListener('hashchange', async () => {
   resubscribe()
 })
 
-els.roomBtn.addEventListener('click', () => {
-  const input = prompt('ตั้งชื่อห้อง (ปล่อยว่างเพื่อกลับห้องหลัก):', room === 'main' ? '' : room)
-  if (input === null) return
-  const name = input.trim().replace(/\s+/g, '-').slice(0, 64)
-  location.hash = name && name !== 'main' ? encodeURIComponent(name) : ''
+// ช่องชื่อห้องในป้ายแท็บ: พิมพ์แล้วกด Enter เพื่อเปลี่ยนห้อง (Esc = ยกเลิก)
+els.roomTab.addEventListener('click', () => els.roomInput.focus())
+els.roomInput.addEventListener('input', fitRoomInput)
+
+els.roomInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    els.roomInput.blur()
+  } else if (e.key === 'Escape') {
+    els.roomInput.value = room
+    fitRoomInput()
+    els.roomInput.blur()
+  }
+})
+
+els.roomInput.addEventListener('blur', () => {
+  const name = els.roomInput.value.trim().replace(/\s+/g, '-').slice(0, 64)
+  const target = name || 'main'
+  if (target === room) {
+    els.roomInput.value = room
+    fitRoomInput()
+    return
+  }
+  location.hash = target !== 'main' ? encodeURIComponent(target) : ''
 })
 
 els.copyBtn.addEventListener('click', async () => {
