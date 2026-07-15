@@ -49,6 +49,7 @@
           <input id="room-input" class="room-input" type="text" value=""
                  placeholder="พิมพ์ชื่อห้อง…"
                  maxlength="64" autocomplete="off" spellcheck="false" />
+          <button id="dice-btn" class="dice-btn" type="button" title="สุ่มชื่อห้องใหม่">🎲</button>
           <span class="room-edit" aria-hidden="true">✎</span>
         </div>
         <span id="live-pill" class="pill connecting">
@@ -58,11 +59,21 @@
       </div>
 
       <div class="card pad">
+        <div id="conflict" class="conflict" role="alert" hidden>
+          <span>มีคนอื่นแก้ห้องนี้พร้อมกัน — ยังไม่ได้ทับข้อความของคุณ</span>
+          <span class="conflict-actions">
+            <button id="conflict-load" type="button" class="link-btn">ดูเวอร์ชันล่าสุด</button>
+            <button id="conflict-dismiss" type="button" class="link-btn muted-btn">เก็บของฉันไว้</button>
+          </span>
+        </div>
         <label class="sr-only" for="editor">ข้อความที่อยากแชร์</label>
         <textarea id="editor" placeholder="ใส่ข้อความที่อยากแชร์…" spellcheck="false" autocomplete="off"></textarea>
         <div class="card-foot">
           <span id="save-state" aria-live="polite"></span>
           <span class="foot-right">
+            <button id="copy-text" type="button" class="mini-btn" title="คัดลอกข้อความทั้งหมด">คัดลอกข้อความ</button>
+            <button id="download-txt" type="button" class="mini-btn" title="ดาวน์โหลดเป็นไฟล์ .txt">ดาวน์โหลด .txt</button>
+            <span class="sep" aria-hidden="true">·</span>
             <span id="updated-at"></span>
             <span class="sep" aria-hidden="true">·</span>
             <span id="char-count">0 ตัวอักษร</span>
@@ -70,7 +81,9 @@
         </div>
       </div>
 
-      <p class="hint">ตั้งชื่อห้องแล้วกด "คัดลอกลิงก์ห้องนี้" ส่งให้เพื่อน — ทุกคนที่เปิดลิงก์ห้องเดียวกันเห็นข้อความชุดเดียวกัน (ลิงก์ห้องคือ <code>#ชื่อห้อง</code> ต่อท้าย URL)</p>
+      <div id="recent" class="recent" hidden></div>
+
+      <p class="hint">ตั้งชื่อห้องแล้วกด "คัดลอกลิงก์ห้องนี้" ส่งให้เพื่อน — ทุกคนที่เปิดลิงก์ห้องเดียวกันเห็นข้อความชุดเดียวกัน (ลิงก์ห้องคือ <code>#ชื่อห้อง</code> ต่อท้าย URL) · กด 🎲 เพื่อสุ่มชื่อห้องใหม่ที่เดายาก</p>
     </main>
 
   </div>
