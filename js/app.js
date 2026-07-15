@@ -2,8 +2,8 @@
 // แชร์ข้อความ (ShareKhoKhwam) — สมุดแชร์เรียลไทม์ด้วย Supabase
 // พิมพ์ → หน่วงสั้น ๆ แล้วบันทึกอัตโนมัติ → ทุกเบราว์เซอร์ที่เปิด
 // ห้องเดียวกันได้รับข้อความใหม่ผ่าน Supabase Realtime ทันที
-// ฟีเจอร์: สุ่มชื่อห้อง, เตือนเมื่อมีคนแก้พร้อมกัน,
-//          คัดลอก/ดาวน์โหลด, จำห้องที่เคยเข้า
+// ฟีเจอร์: สุ่มชื่อห้อง, เตือนเมื่อมีคนแก้พร้อมกัน, แถบบอกจำนวนคนในห้อง,
+//          คัดลอก/ดาวน์โหลด, จำห้องที่เคยเข้า (5 ห้องล่าสุด)
 // ============================================================
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
@@ -29,15 +29,19 @@ const els = {
   conflictLoad: document.getElementById('conflict-load'),
   conflictDismiss: document.getElementById('conflict-dismiss'),
   recent:    document.getElementById('recent'),
+  presence:  document.getElementById('presence-bar'),
 }
 
 const DEBOUNCE_MS = 500
-const RECENT_MAX = 8
+const RECENT_MAX = 5
 const BASE_TITLE = 'แชร์ข้อความ — เห็นพร้อมกันแบบเรียลไทม์'
 const timeFmt = new Intl.DateTimeFormat('th-TH', {
   day: '2-digit', month: '2-digit', year: 'numeric',
   hour: '2-digit', minute: '2-digit',
 })
+
+// รหัสประจำเครื่องนี้ (ไว้ให้ presence แยกแต่ละคนออกจากกัน)
+const CLIENT_ID = Math.random().toString(36).slice(2) + Date.now().toString(36)
 
 let supabase = null
 let room = readRoom()
@@ -98,6 +102,14 @@ function setPill(state) {
     state === 'live' ? 'เรียลไทม์' :
     state === 'offline' ? 'หลุดการเชื่อมต่อ' :
     state === 'idle' ? 'ยังไม่ได้เลือกห้อง' : 'กำลังเชื่อมต่อ'
+}
+
+function setPresence(n) {
+  if (!room || !n) { els.presence.hidden = true; return }
+  els.presence.hidden = false
+  els.presence.textContent = n === 1
+    ? `ตอนนี้มีคุณอยู่ในห้อง "${room}" คนเดียว`
+    : `ตอนนี้มี ${n} คนอยู่ในห้อง "${room}"`
 }
 
 function setEditorEnabled(on) {
@@ -230,15 +242,25 @@ function resubscribe() {
   const listenOpts = { event: '*', schema: 'public', table: TABLE_NAME }
   if (/^[A-Za-z0-9_-]+$/.test(room)) listenOpts.filter = `id=eq.${room}`
 
-  const ch = supabase.channel(`note-${room}`)
+  const ch = supabase.channel(`note-${room}`, {
+    config: { presence: { key: CLIENT_ID } },
+  })
   ch.on('postgres_changes', listenOpts, onRemoteChange)
+
+  // นับจำนวนคนในห้อง (แสดงอย่างเดียว)
+  ch.on('presence', { event: 'sync' }, () => {
+    if (channel !== ch) return
+    setPresence(Object.keys(ch.presenceState()).length)
+  })
 
   ch.subscribe((status) => {
     if (channel !== ch) return
     if (status === 'SUBSCRIBED') {
       setPill('live')
+      ch.track({ id: CLIENT_ID, at: Date.now() })
     } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
       setPill('offline')
+      setPresence(0)
       clearTimeout(reconnectTimer)
       reconnectTimer = setTimeout(resubscribe, 4000)
     }
@@ -328,6 +350,7 @@ function enterNoRoom() {
   setUpdated(null)
   setSaveState('idle')
   setEditorEnabled(false)
+  setPresence(0)
   setPill('idle')
   renderRecent()
 }
