@@ -344,19 +344,78 @@ body {
   margin: 14px 2px 0;
 }
 .recent-label { font-size: 12.5px; color: var(--muted); }
+/* ชิป = กรอบเดียว มีปุ่มพี่น้องสองปุ่มข้างใน (ไม่มีปุ่มซ้อนปุ่ม) */
 .chip {
+  display: inline-flex;
+  align-items: center;
   border: 1px solid var(--line);
   background: var(--card);
+  border-radius: 999px;
+  transition: background .15s, border-color .15s;
+}
+.chip-go {
+  border: 0;
+  background: transparent;
   color: var(--khram-deep);
   font-family: var(--font-pad);
   font-size: 12px;
-  padding: 3px 10px;
+  line-height: 1.5;
+  padding: 3px 4px 3px 10px;
   border-radius: 999px;
   cursor: pointer;
-  transition: background .15s, border-color .15s;
 }
-.chip:hover { background: #EDF3F9; border-color: #CBD9E6; }
-.chip.current { background: var(--khram); color: #fff; border-color: var(--khram); cursor: default; }
+.chip-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);          /* เห็นตลอดทุกอุปกรณ์ — จอสัมผัสไม่มี hover ให้รอ */
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px 9px 5px 4px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chip-go:focus-visible,
+.chip-x:focus-visible {
+  outline: 2px solid var(--khram);   /* --focus จางเกินเกณฑ์ 3:1 ของ WCAG 1.4.11 */
+  outline-offset: 1px;
+}
+.chip.current { background: var(--khram); border-color: var(--khram); }
+.chip.current .chip-go { color: #fff; cursor: default; }
+.chip.current .chip-x  { color: #D5E2EE; }
+.chip.current .chip-go:focus-visible,
+.chip.current .chip-x:focus-visible { outline-color: #fff; }
+
+/* สไตล์ hover เฉพาะเครื่องที่ชี้เมาส์ได้จริง — จอสัมผัสจะได้ไม่ค้าง hover */
+@media (hover: hover) {
+  .chip:hover { background: #EDF3F9; border-color: #CBD9E6; }
+  .chip-x:hover { color: #A63A25; }
+  .chip.current:hover { background: var(--khram-deep); border-color: var(--khram-deep); }
+  .chip.current .chip-x:hover { color: #fff; }
+}
+
+/* ข้อความชั่วคราว + ปุ่มเรียกคืน — ต่อท้ายแถวเสมอ จึงดันชิปที่อยู่ก่อนหน้าไม่ได้ */
+.recent-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  animation: note-in .18s ease-out;
+}
+@keyframes note-in { from { opacity: 0; } to { opacity: 1; } }
+.recent-note-text.warn { color: #A63A25; }   /* --warn บนพื้นกระดาษได้ 4.37:1 ไม่ผ่าน */
+/* .link-btn เดิม padding:0 สูงแค่ ~21px — เติมให้ถึงเกณฑ์เป้ากด 24px ของ WCAG 2.5.8 */
+.recent-clear,
+.recent-note .link-btn { font-size: 12.5px; padding: 4px 5px; }
+.recent .link-btn:focus-visible {
+  outline: 2px solid var(--khram);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 .hint {
   margin: 14px 2px 0;
@@ -391,6 +450,13 @@ body {
   .top { align-items: flex-start; margin-bottom: 20px; }
   .brand h1 { font-size: 25px; }
   #editor { padding: 16px; min-height: 52vh; font-size: 14.5px; }
+  .recent { gap: 10px; }
+  .chip { min-height: 36px; }
+  .chip-go { padding: 8px 5px 8px 13px; font-size: 12.5px; }
+  .chip-x { min-width: 30px; padding: 8px 11px 9px 6px; font-size: 16px; }
+  .recent-clear,
+  .recent-note .link-btn { padding: 8px 6px; }
+  .recent-note { width: 100%; }   /* ลงบรรทัดของตัวเอง ไม่เบียดชิป */
 }
 
 @media (prefers-reduced-motion: reduce) {

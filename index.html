@@ -93,6 +93,8 @@
       </div>
 
       <div id="recent" class="recent" hidden></div>
+      <!-- บอกผลการลบให้โปรแกรมอ่านหน้าจอ — ต้องอยู่นอก #recent เพราะ #recent ถูกวาดใหม่ทั้งก้อนทุกครั้ง -->
+      <p id="recent-live" class="sr-only" role="status" aria-live="polite"></p>
 
       <p class="hint">ตั้งชื่อห้องแล้วกด "คัดลอกลิงก์ห้องนี้" ส่งให้เพื่อน — ทุกคนที่เปิดลิงก์ห้องเดียวกันเห็นข้อความชุดเดียวกัน (ลิงก์ห้องคือ <code>#ชื่อห้อง</code> ต่อท้าย URL)</p>
     </main>
